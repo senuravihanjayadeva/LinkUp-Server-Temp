@@ -1,92 +1,96 @@
 const UserModel = require('../models/User.model');
 const ApplicationModel = require('../models/Applications.model');
 
-const insertApplication = async (userId, data) => {
-	return await ApplicationModel.create(data)
+const insertApplication = async (request, response) => {
+	return await ApplicationModel.create(request.body)
 		.then(async (createdApplication) => {
-			const user = await UserModel.findById(userId);
+			const user = await UserModel.findById(request.params.userId);
 			if (user) {
 				user.applicationList.unshift(createdApplication);
 				return user
 					.save()
 					.then(() => {
-						return createdApplication;
+						return response.json(createdApplication);
 					})
 					.catch((error) => {
-						return error;
+						return response.json(error);
 					});
 			}
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const getAllApplications = async () => {
+const getAllApplications = async (request, response) => {
 	return await ApplicationModel.find()
 		.then((applications) => {
-			return applications;
+			return response.json(applications);
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const getApplicationById = async (applicationId) => {
-	return await ApplicationModel.findById(applicationId)
+const getApplicationById = async  (request, response) => {
+	return await ApplicationModel.findById(request.params.applicationId)
 		.then((application) => {
-			return application;
+			return response.json(application);
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const updateApplication = async (applicationId, updateData) => {
-	return await ApplicationModel.findById(applicationId)
+const updateApplication = async (request, response) => {
+	return await ApplicationModel.findById(request.params.applicationId)
 		.then(async (applicationDetails) => {
 			if (applicationDetails) {
 				if (applicationDetails.applicantName) {
-					applicationDetails.applicantName = updateData.applicantName;
+					applicationDetails.applicantName = request.body.applicantName;
 				}
 				if (applicationDetails.nic) {
-					applicationDetails.nic = updateData.nic;
+					applicationDetails.nic = request.body.nic;
 				}
 				if (applicationDetails.contactNumber) {
-					applicationDetails.contactNumber = updateData.contactNumber;
+					applicationDetails.contactNumber = request.body.contactNumber;
 				}
 				if (applicationDetails.university) {
-					applicationDetails.university = updateData.university;
+					applicationDetails.university = request.body.university;
 				}
 				if (applicationDetails.skills) {
-					applicationDetails.skills = updateData.skills;
+					applicationDetails.skills = request.body.skills;
 				}
 				if (applicationDetails.languages) {
-					applicationDetails.languages = updateData.languages;
+					applicationDetails.languages = request.body.languages;
 				}
 				if (applicationDetails.linkedIn) {
-					applicationDetails.linkedIn = updateData.linkedIn;
+					applicationDetails.linkedIn = request.body.linkedIn;
 				}
 				if (applicationDetails.github) {
-					applicationDetails.github = updateData.github;
+					applicationDetails.github = request.body.github;
 				}
 				if (applicationDetails.status) {
-					applicationDetails.status = updateData.status;
+					applicationDetails.status = request.body.status;
 				}
-				return await applicationDetails.save();
+				return await applicationDetails.save().then((updatedApplication)=>{
+					return response.json(updatedApplication);
+				}).catch((error)=>{
+					return response.json(error);
+				});
 			} else {
-				throw new Error("Job not found");
+				return response.json("Job not found");
 			}
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const deleteApplicationPermenently = async (userId,applicationId) => {
-	return await ApplicationModel.findByIdAndDelete(applicationId)
+const deleteApplicationPermenently = async (request, response) => {
+	return await ApplicationModel.findByIdAndDelete(request.params.applicationId)
 		.then(async (application) => {
-			const user = await UserModel.findById(userId);
+			const user = await UserModel.findById(request.params.userId);
 			if (user) {
 				await user.applicationList.splice(
 					user.applicationList.findIndex((a) => a._id.toString() === application._id.toString()),
@@ -96,15 +100,15 @@ const deleteApplicationPermenently = async (userId,applicationId) => {
 				return await user
 					.save()
 					.then(() => {
-						return application;
+						return response.json(application);
 					})
 					.catch((error) => {
-						return error;
+						return response.json(error);
 					});
 			}
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
