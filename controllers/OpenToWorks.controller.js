@@ -1,74 +1,78 @@
 const OpenToWork = require('../models/OpenToWorks.model');
 const UserModel = require('../models/User.model');
 
-const insertOpenToWork = async (userId, data) => {
-	return await OpenToWork.create(data)
+const insertOpenToWork = async (request, response) => {
+	return await OpenToWork.create(request.body)
 		.then(async (createdOpenToWork) => {
-			const user = await UserModel.findById(userId);
+			const user = await UserModel.findById(request.params.userId);
 			if (user) {
 				user.openToWorkList.unshift(createdOpenToWork);
 				return user
 					.save()
 					.then(() => {
-						return createdOpenToWork;
+						return response.json(createdOpenToWork);
 					})
 					.catch((error) => {
-						return error;
+						return response.json(error);
 					});
 			}
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const getAllOpenToWorks = async () => {
+const getAllOpenToWorks = async (request, response) => {
 	return await OpenToWork.find()
 		.then((openToWorks) => {
-			return openToWorks;
+			return response.json(openToWorks);
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const getOpenToWorkById = async (openToWorkId) => {
-	return await OpenToWork.findById(openToWorkId)
+const getOpenToWorkById = async (request, response) => {
+	return await OpenToWork.findById(request.params.openToWorkId)
 		.then((openToWork) => {
-			return openToWork;
+			return response.json(openToWork);
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const updateOpenToWork = async (openToWorkId, updateData) => {
-	return await OpenToWork.findById(openToWorkId)
+const updateOpenToWork = async (request, response) => {
+	return await OpenToWork.findById(request.params.openToWorkId)
 		.then(async (openToWorkDetails) => {
 			if (openToWorkDetails) {
 				if (openToWorkDetails.applicantName) {
-					openToWorkDetails.applicantName = updateData.applicantName;
+					openToWorkDetails.applicantName = request.body.applicantName;
 				}
 				if (openToWorkDetails.applyingPosition) {
-					openToWorkDetails.applyingPosition = updateData.applyingPosition;
+					openToWorkDetails.applyingPosition = request.body.applyingPosition;
 				}
 				if (openToWorkDetails.description) {
-					openToWorkDetails.description = updateData.description;
+					openToWorkDetails.description = request.body.description;
 				}
-				return await openToWorkDetails.save();
+				return await openToWorkDetails.save().then((updatedOpenToWork)=>{
+					return response.json(updatedOpenToWork);
+				}).catch((error)=>{
+					return response.json(error);
+				});
 			} else {
-				throw new Error("OpenToWork not found");
+				return response.json("OpenToWork not found");
 			}
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
-const deleteOpenToWorkPermenently = async (userId,openToWorkId) => {
-	return await OpenToWork.findByIdAndDelete(openToWorkId)
+const deleteOpenToWorkPermenently = async (request, response)  => {
+	return await OpenToWork.findByIdAndDelete(request.params.openToWorkId)
 		.then(async (openToWork) => {
-			const user = await UserModel.findById(userId);
+			const user = await UserModel.findById(request.params.userId);
 			if (user) {
 				await user.openToWorkList.splice(
 					user.openToWorkList.findIndex((a) => a._id.toString() === openToWork._id.toString()),
@@ -78,15 +82,15 @@ const deleteOpenToWorkPermenently = async (userId,openToWorkId) => {
 				return await user
 					.save()
 					.then(() => {
-						return openToWork;
+						return response.json(openToWork);
 					})
 					.catch((error) => {
-						return error;
+						return response.json(error);
 					});
 			}
 		})
 		.catch((error) => {
-			throw new Error(error.message);
+			return response.json(error);
 		});
 };
 
