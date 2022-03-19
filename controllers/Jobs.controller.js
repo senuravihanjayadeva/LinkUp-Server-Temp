@@ -1,74 +1,78 @@
 const JobModel = require("../models/Jobs.model");
 const UserModel = require("../models/User.model");
 
-const insertJob = async (userId, data) => {
-  return await JobModel.create(data)
+const insertJob = async (request, response) => {
+  return await JobModel.create(request.body)
     .then(async (createdJob) => {
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(request.params.userId);
       if (user) {
         user.jobList.unshift(createdJob);
         return user
           .save()
           .then(() => {
-            return createdJob;
+            return response.json(createdJob);
           })
           .catch((error) => {
-            return error;
+            return response.json(error);
           });
       }
     })
     .catch((error) => {
-      throw new Error(error.message);
+      return response.json(error);
     });
 };
 
-const getAllJobs = async () => {
+const getAllJobs = async (request, response) => {
   return await JobModel.find()
     .then((jobs) => {
-      return jobs;
+      return response.json(jobs);
     })
     .catch((error) => {
-      throw new Error(error.message);
+      return response.json(error);
     });
 };
 
-const getJobById = async (jobId) => {
-  return await JobModel.findById(jobId)
+const getJobById = async (request, response) => {
+  return await JobModel.findById(request.params.jobId)
     .then((job) => {
-      return job;
+      return response.json(job);
     })
     .catch((error) => {
-      throw new Error(error.message);
+      return response.json(error);
     });
 };
 
-const updateJob = async (jobId, updateData) => {
-  return await JobModel.findById(jobId)
+const updateJob = async (request, response) => {
+  return await JobModel.findById(request.params.jobId)
     .then(async (jobDetails) => {
       if (jobDetails) {
         if (jobDetails.company) {
-          jobDetails.company = updateData.company;
+          jobDetails.company = request.body.company;
         }
         if (jobDetails.position) {
-          jobDetails.position = updateData.position;
+          jobDetails.position = request.body.position;
         }
         if (jobDetails.description) {
-          jobDetails.description = updateData.description;
+          jobDetails.description = request.body.description;
         }
-        return await jobDetails.save();
+        jobDetails.save().then((updatedJob)=>{
+          return response.json(updatedJob);
+        }).catch((error)=>{
+          return response.json(error);
+        });
       } else {
-        throw new Error("Job not found");
+        return response.json("Job Not Found");
       }
     })
     .catch((error) => {
-      throw new Error(error.message);
+      return response.json(error);
     });
 };
 
-const deleteJobPermenently = async (userId, jobId) => {
-  return await JobModel.findByIdAndDelete(jobId)
+const deleteJobPermenently = async  (request, response) => {
+  return await JobModel.findByIdAndDelete(request.params.jobId)
     .then(async (job) => {
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(request.params.userId);
       if (user) {
         await user.jobList.splice(
           user.jobList.findIndex(
@@ -80,15 +84,15 @@ const deleteJobPermenently = async (userId, jobId) => {
         return await user
           .save()
           .then(() => {
-            return job;
+            return response.json(job);
           })
           .catch((error) => {
-            return error;
+            return response.json(error);
           });
       }
     })
     .catch((error) => {
-      throw new Error(error.message);
+      return response.json(error);
     });
 };
 
