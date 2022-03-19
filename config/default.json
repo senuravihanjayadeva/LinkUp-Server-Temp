@@ -1,0 +1,5 @@
+{
+    "mongoURL": "mongodb+srv://linkupadmin:linkupadmin2022@linkup-cluster.a1bvi.mongodb.net/linkupdb?retryWrites=true&w=majority",
+  
+    "jwtSecret": "mysecrettoken"
+}
