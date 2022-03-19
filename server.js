@@ -19,8 +19,16 @@ app.get("/", (req, res) => res.send("LinkUp Backend Api Running"));
 //Define Routes
 
 //-------------------User---------------------
-app.use("/api/user", require("./routes/User.route"));
+app.use("/user", require("./routes/User.route"));
 
+//-------------------Jobs---------------------
+app.use("/jobs", require("./routes/Jobs.route"));
+
+//-------------------Applications---------------------
+app.use("/applications", require("./routes/Applications.route"));
+
+//-------------------OpenToWorks---------------------
+app.use("/opentowork", require("./routes/OpenToWorks.route"));
 
 const PORT = process.env.PORT || 5000;
 
