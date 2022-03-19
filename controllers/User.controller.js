@@ -114,4 +114,14 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { getUserDetails, loginUser, registerUser };
+const deleteUserPermenently = async (request, response) => {
+	return await User.findByIdAndDelete(request.params.userId)
+		.then((user) => {
+      return response.json(user);
+		})
+		.catch((error) => {
+			return response.json(error);
+		});
+};
+
+module.exports = { getUserDetails, loginUser, registerUser, deleteUserPermenently };
