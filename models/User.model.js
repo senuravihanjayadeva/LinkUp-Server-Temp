@@ -1,29 +1,41 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema(	{
-    name: { type: String, required: false },
+const UserSchema = new Schema(
+  {
+    firstName: { type: String, required: false },
+    lastName: { type: String, required: false },
+    phoneNumber: { type: String, required: false },
     password: { type: String, required: false },
     email: { type: String, required: false },
+    profileImageURL: { type: String, required: false },
+    skills: [{ type: String, required: false }],
+    education: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Education",
+      },
+    ],
+    experience: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Experience",
+      },
+    ],
     applicationList: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Application",
-        },
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Application",
+      },
     ],
     jobList: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Jobs",
-        },
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Jobs",
+      },
     ],
-    openToWorkList: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "OpenToWork",
-        },
-    ],
-},
-{ timestamps: true });
+  },
+  { timestamps: true }
+);
 
 module.exports = User = mongoose.model("User", UserSchema);
