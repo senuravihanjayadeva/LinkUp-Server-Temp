@@ -22,6 +22,12 @@ const UserSchema = new Schema(
         ref: "Experience",
       },
     ],
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts",
+      },
+    ],
     applicationList: [
       {
         type: mongoose.Schema.Types.ObjectId,
