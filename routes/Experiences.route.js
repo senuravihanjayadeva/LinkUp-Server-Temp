@@ -7,7 +7,7 @@ const {
     getExperienceById,
     updateExperience,
     deleteExperiencePermenently,
-} = require("../controllers/Experience.controllerr");
+} = require("../controllers/Experiences.controller");
 
 router.post("/user/:userId", insertExperience);
 router.get("/:experienceId", getExperienceById);

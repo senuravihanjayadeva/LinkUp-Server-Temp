@@ -34,7 +34,7 @@ app.use("/opentowork", require("./routes/OpenToWorks.route"));
 app.use("/educations", require("./routes/Educations.route"));
 
 //-------------------Experiences---------------------
-app.use("/experiences", require("./routes/Experience.route"));
+app.use("/experiences", require("./routes/Experiences.route"));
 
 const PORT = process.env.PORT || 5000;
 
