@@ -30,6 +30,9 @@ app.use("/applications", require("./routes/Applications.route"));
 //-------------------OpenToWorks---------------------
 app.use("/opentowork", require("./routes/OpenToWorks.route"));
 
+//-------------------Education---------------------
+app.use("/educations", require("./routes/Educations.route"));
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
