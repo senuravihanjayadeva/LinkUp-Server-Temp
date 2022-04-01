@@ -40,25 +40,9 @@ const loginUser = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
+    } else {
+      return res.json(user);
     }
-
-    //Return jsonwebtoken
-
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      config.get("jwtSecret"),
-      { expiresIn: 360000 },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
   } catch (err) {
     //Something wrong with the server
     console.error(err.message);
