@@ -8,7 +8,7 @@ const getUserDetails = async (req, res) => {
   try {
     //get user details
     //-password : dont return the pasword
-    const user = await User.findById(req.user.id)
+    const user = await User.findOne({ email: req.user.email })
       .select("-password")
       .populate({ path: "education", model: "Education" })
       .populate({ path: "experience", model: "Experience" })
@@ -113,6 +113,52 @@ const registerUser = async (req, res) => {
   }
 };
 
+const updateUser = async (request, response) => {
+  return await User.findById(request.body.Id)
+    .then(async (userDetails) => {
+      if (userDetails) {
+        if (request.body.firstName) {
+          userDetails.firstName = request.body.firstName;
+        }
+        if (request.body.lastName) {
+          userDetails.lastName = request.body.lastName;
+        }
+        if (request.body.profileImageURL) {
+          userDetails.profileImageURL = request.body.profileImageURL;
+        }
+        if (request.body.email) {
+          userDetails.email = request.body.email;
+        }
+        if (request.body.phoneNumber) {
+          userDetails.phoneNumber = request.body.phoneNumber;
+        }
+
+        if (request.body.password) {
+          //Encrypt Password
+
+          //10 is enogh..if you want more secured.user a value more than 10
+          const salt = await bcrypt.genSalt(10);
+
+          //hashing password
+          userDetails.password = await bcrypt.hash(request.body.password, salt);
+        }
+        return await userDetails
+          .save()
+          .then((updatedUser) => {
+            return response.json(updatedUser);
+          })
+          .catch((error) => {
+            return response.json(error);
+          });
+      } else {
+        return response.json("User Not Found");
+      }
+    })
+    .catch((error) => {
+      return response.json(error);
+    });
+};
+
 const deleteUserPermenently = async (request, response) => {
   return await User.findByIdAndDelete(request.params.userId)
     .then((user) => {
@@ -127,5 +173,6 @@ module.exports = {
   getUserDetails,
   loginUser,
   registerUser,
+  updateUser,
   deleteUserPermenently,
 };
