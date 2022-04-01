@@ -46,19 +46,19 @@ const updatePost = async (request, response) => {
   return await PostModel.findById(request.params.postId)
     .then(async (postDetails) => {
       if (postDetails) {
-        if (postDetails.fullName) {
+        if (request.body.fullName) {
           postDetails.fullName = request.body.fullName;
         }
-        if (postDetails.position) {
+        if (request.body.position) {
           postDetails.position = request.body.position;
         }
-        if (postDetails.profileImageURL) {
+        if (request.body.profileImageURL) {
           postDetails.profileImageURL = request.body.profileImageURL;
         }
-        if (postDetails.postImage) {
+        if (request.body.postImage) {
           postDetails.postImage = request.body.postImage;
         }
-        if (postDetails.description) {
+        if (request.body.description) {
           postDetails.description = request.body.description;
         }
         postDetails

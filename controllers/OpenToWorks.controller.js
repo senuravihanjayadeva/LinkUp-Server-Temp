@@ -46,13 +46,13 @@ const updateOpenToWork = async (request, response) => {
 	return await OpenToWork.findById(request.params.openToWorkId)
 		.then(async (openToWorkDetails) => {
 			if (openToWorkDetails) {
-				if (openToWorkDetails.applicantName) {
+				if (request.body.applicantName) {
 					openToWorkDetails.applicantName = request.body.applicantName;
 				}
-				if (openToWorkDetails.applyingPosition) {
+				if (request.body.applyingPosition) {
 					openToWorkDetails.applyingPosition = request.body.applyingPosition;
 				}
-				if (openToWorkDetails.description) {
+				if (request.body.description) {
 					openToWorkDetails.description = request.body.description;
 				}
 				return await openToWorkDetails.save().then((updatedOpenToWork)=>{

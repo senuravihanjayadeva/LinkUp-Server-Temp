@@ -46,16 +46,16 @@ const updateEducation = async (request, response) => {
   return await EducationModel.findById(request.params.educationId)
     .then(async (educationDetails) => {
       if (educationDetails) {
-        if (educationDetails.educationLogo) {
+        if (request.body.educationLogo) {
           educationDetails.educationLogo = request.body.educationLogo;
         }
-        if (educationDetails.period) {
+        if (request.body.period) {
           educationDetails.period = request.body.period;
         }
-        if (educationDetails.schoolName) {
+        if (request.body.schoolName) {
           educationDetails.schoolName = request.body.schoolName;
         }
-        if (educationDetails.course) {
+        if (request.body.course) {
           educationDetails.course = request.body.course;
         }
         return await educationDetails

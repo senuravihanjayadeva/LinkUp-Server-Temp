@@ -46,16 +46,16 @@ const updateExperience = async (request, response) => {
   return await ExperienceModel.findById(request.params.experienceId)
     .then(async (experienceDetails) => {
       if (experienceDetails) {
-        if (experienceDetails.companyLogo) {
+        if (request.body.companyLogo) {
           experienceDetails.companyLogo = request.body.companyLogo;
         }
-        if (experienceDetails.position) {
+        if (request.body.position) {
           experienceDetails.position = request.body.position;
         }
-        if (experienceDetails.companyName) {
+        if (request.body.companyName) {
           experienceDetails.companyName = request.body.companyName;
         }
-        if (experienceDetails.description) {
+        if (request.body.description) {
           experienceDetails.description = request.body.description;
         }
         return await experienceDetails

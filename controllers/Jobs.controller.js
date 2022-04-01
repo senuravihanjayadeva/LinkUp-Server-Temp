@@ -46,13 +46,13 @@ const updateJob = async (request, response) => {
   return await JobModel.findById(request.params.jobId)
     .then(async (jobDetails) => {
       if (jobDetails) {
-        if (jobDetails.company) {
+        if (request.body.company) {
           jobDetails.company = request.body.company;
         }
-        if (jobDetails.position) {
+        if (request.body.position) {
           jobDetails.position = request.body.position;
         }
-        if (jobDetails.description) {
+        if (request.body.description) {
           jobDetails.description = request.body.description;
         }
         jobDetails.save().then((updatedJob)=>{

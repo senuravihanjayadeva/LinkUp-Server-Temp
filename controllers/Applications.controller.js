@@ -46,31 +46,31 @@ const updateApplication = async (request, response) => {
 	return await ApplicationModel.findById(request.params.applicationId)
 		.then(async (applicationDetails) => {
 			if (applicationDetails) {
-				if (applicationDetails.applicantName) {
+				if (request.body.applicantName) {
 					applicationDetails.applicantName = request.body.applicantName;
 				}
-				if (applicationDetails.nic) {
+				if (request.body.nic) {
 					applicationDetails.nic = request.body.nic;
 				}
-				if (applicationDetails.contactNumber) {
+				if (request.body.contactNumber) {
 					applicationDetails.contactNumber = request.body.contactNumber;
 				}
-				if (applicationDetails.university) {
+				if (request.body.university) {
 					applicationDetails.university = request.body.university;
 				}
-				if (applicationDetails.skills) {
+				if (request.body.skills) {
 					applicationDetails.skills = request.body.skills;
 				}
-				if (applicationDetails.languages) {
+				if (request.body.languages) {
 					applicationDetails.languages = request.body.languages;
 				}
-				if (applicationDetails.linkedIn) {
+				if (request.body.linkedIn) {
 					applicationDetails.linkedIn = request.body.linkedIn;
 				}
-				if (applicationDetails.github) {
+				if (request.body.github) {
 					applicationDetails.github = request.body.github;
 				}
-				if (applicationDetails.status) {
+				if (request.body.status) {
 					applicationDetails.status = request.body.status;
 				}
 				return await applicationDetails.save().then((updatedApplication)=>{
