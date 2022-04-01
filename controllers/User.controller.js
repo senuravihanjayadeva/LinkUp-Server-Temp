@@ -8,7 +8,13 @@ const getUserDetails = async (req, res) => {
   try {
     //get user details
     //-password : dont return the pasword
-    const user = await User.findById(req.user.id).select("-password").populate({ path: "education", model: "Education" }).populate({ path: "experience", model: "Experience" }).populate({ path: "posts", model: "Posts" }).populate({ path: "applicationList", model: "Application" }).populate({ path: "jobList", model: "Jobs" });
+    const user = await User.findById(req.user.id)
+      .select("-password")
+      .populate({ path: "education", model: "Education" })
+      .populate({ path: "experience", model: "Experience" })
+      .populate({ path: "posts", model: "Posts" })
+      .populate({ path: "applicationList", model: "Application" })
+      .populate({ path: "jobList", model: "Jobs" });
     res.json(user);
   } catch {
     console.log(err.message);
@@ -62,8 +68,9 @@ const loginUser = async (req, res) => {
 
 //Register User
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
-  
+  const { firstName, lastName, phoneNumber, profileImageURL, email, password } =
+    req.body;
+
   try {
     //See if user Exist
     let user = await User.findOne({ email });
@@ -74,7 +81,10 @@ const registerUser = async (req, res) => {
 
     //create a Site User instance
     user = new User({
-      name,
+      firstName,
+      lastName,
+      phoneNumber,
+      profileImageURL,
       email,
       password,
     });
@@ -87,14 +97,10 @@ const registerUser = async (req, res) => {
     //hashing password
     user.password = await bcrypt.hash(password, salt);
 
-    //save user to the database
-    await user.save();
-
     //Return jsonwebtoken
-
     const payload = {
       user: {
-        id: user.id,
+        email: user.email,
       },
     };
 
@@ -104,7 +110,16 @@ const registerUser = async (req, res) => {
       { expiresIn: 360000 },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        //save user to the database
+        user.token = token;
+        return user
+          .save()
+          .then((registeredUser) => {
+            return res.json(registeredUser);
+          })
+          .catch((error) => {
+            return res.json(error);
+          });
       }
     );
   } catch (err) {
@@ -115,13 +130,18 @@ const registerUser = async (req, res) => {
 };
 
 const deleteUserPermenently = async (request, response) => {
-	return await User.findByIdAndDelete(request.params.userId)
-		.then((user) => {
+  return await User.findByIdAndDelete(request.params.userId)
+    .then((user) => {
       return response.json(user);
-		})
-		.catch((error) => {
-			return response.json(error);
-		});
+    })
+    .catch((error) => {
+      return response.json(error);
+    });
 };
 
-module.exports = { getUserDetails, loginUser, registerUser, deleteUserPermenently };
+module.exports = {
+  getUserDetails,
+  loginUser,
+  registerUser,
+  deleteUserPermenently,
+};

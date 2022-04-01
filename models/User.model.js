@@ -10,6 +10,7 @@ const UserSchema = new Schema(
     email: { type: String, required: false },
     profileImageURL: { type: String, required: false },
     skills: [{ type: String, required: false }],
+    token: { type: String, required: false },
     education: [
       {
         type: mongoose.Schema.Types.ObjectId,
