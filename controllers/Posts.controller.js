@@ -33,7 +33,7 @@ const getAllPosts = async (request, response) => {
 };
 
 const getPostById = async (request, response) => {
-  return await PostModel.findById(request.params.jobId)
+  return await PostModel.findById(request.params.postId)
     .then((post) => {
       return response.json(post);
     })
