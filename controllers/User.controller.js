@@ -113,6 +113,30 @@ const registerUser = async (req, res) => {
   }
 };
 
+const updateUserImage = async (request, response) => {
+  return await User.findById(request.body.Id)
+    .then(async (userDetails) => {
+      if (userDetails) {
+        if (request.body.profileImageURL) {
+          userDetails.profileImageURL = request.body.profileImageURL;
+        }
+        return await userDetails
+          .save()
+          .then((updatedUser) => {
+            return response.json(updatedUser);
+          })
+          .catch((error) => {
+            return response.json(error);
+          });
+      } else {
+        return response.json("User Not Found");
+      }
+    })
+    .catch((error) => {
+      return response.json(error);
+    });
+};
+
 const updateUser = async (request, response) => {
   return await User.findById(request.body.Id)
     .then(async (userDetails) => {
@@ -173,6 +197,7 @@ module.exports = {
   getUserDetails,
   loginUser,
   registerUser,
+  updateUserImage,
   updateUser,
   deleteUserPermenently,
 };
