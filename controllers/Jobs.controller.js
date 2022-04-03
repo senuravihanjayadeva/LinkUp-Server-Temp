@@ -46,8 +46,14 @@ const updateJob = async (request, response) => {
   return await JobModel.findById(request.params.jobId)
     .then(async (jobDetails) => {
       if (jobDetails) {
-        if (request.body.company) {
-          jobDetails.company = request.body.company;
+        if (request.body.companyLogo) {
+          jobDetails.companyLogo = request.body.companyLogo;
+        }
+        if (request.body.companyName) {
+          jobDetails.companyName = request.body.companyName;
+        }
+        if (request.body.jobImage) {
+          jobDetails.jobImage = request.body.jobImage;
         }
         if (request.body.position) {
           jobDetails.position = request.body.position;
