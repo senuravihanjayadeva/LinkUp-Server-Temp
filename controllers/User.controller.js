@@ -52,7 +52,7 @@ const loginUser = async (req, res) => {
 
 //Register User
 const registerUser = async (req, res) => {
-  const { firstName, lastName, phoneNumber, profileImageURL, email, password } =
+  const { firstName, lastName, phoneNumber, profileImageURL, email, password, position } =
     req.body;
 
   try {
@@ -70,6 +70,7 @@ const registerUser = async (req, res) => {
       phoneNumber,
       profileImageURL,
       email,
+      position,
       password,
     });
 
@@ -155,6 +156,9 @@ const updateUser = async (request, response) => {
         }
         if (request.body.phoneNumber) {
           userDetails.phoneNumber = request.body.phoneNumber;
+        }
+        if (request.body.position) {
+          userDetails.position = request.body.position;
         }
 
         if (request.body.password) {
