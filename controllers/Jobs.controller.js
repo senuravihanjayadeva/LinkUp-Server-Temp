@@ -58,6 +58,9 @@ const updateJob = async (request, response) => {
         if (request.body.position) {
           jobDetails.position = request.body.position;
         }
+        if (request.body.salary) {
+          jobDetails.salary = request.body.salary;
+        }
         if (request.body.description) {
           jobDetails.description = request.body.description;
         }

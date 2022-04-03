@@ -7,6 +7,7 @@ const JobsSchema = new Schema(
 		companyName: String,
 		jobImage:String,
 		position:String,
+		salary: String,
 		description: String,
 	},
 	{ timestamps: true }
