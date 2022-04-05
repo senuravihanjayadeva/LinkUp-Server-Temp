@@ -13,7 +13,10 @@ const ApplicationsSchema = new Schema(
     github: String,
     status: String,
     userId: mongoose.Types.ObjectId,
-    jobId: mongoose.Types.ObjectId,
+    job: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Jobs",
+    },
   },
   { timestamps: true }
 );

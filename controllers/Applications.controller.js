@@ -5,6 +5,9 @@ const JobModel = require("../models/Jobs.model");
 const insertApplication = async (request, response) => {
   request.body.status = "PENDING";
   request.body.userId = request.params.userId;
+  request.body.job = {
+    _id: request.body.jobId,
+  };
   return await ApplicationModel.create(request.body)
     .then(async (createdApplication) => {
       const user = await UserModel.findById(request.params.userId);
@@ -38,6 +41,7 @@ const insertApplication = async (request, response) => {
 
 const getAllApplications = async (request, response) => {
   return await ApplicationModel.find()
+    .populate({ path: "job", model: "Jobs" })
     .then((applications) => {
       return response.json(applications);
     })
@@ -47,7 +51,7 @@ const getAllApplications = async (request, response) => {
 };
 
 const getApplicationById = async (request, response) => {
-  return await ApplicationModel.findById(request.params.applicationId)
+  return await ApplicationModel.findById(request.params.applicationId).populate({ path: "job", model: "Jobs" })
     .then((application) => {
       return response.json(application);
     })
@@ -57,7 +61,7 @@ const getApplicationById = async (request, response) => {
 };
 
 const getApplicationByUserId = async (request, response) => {
-  return await ApplicationModel.find({ userId: request.params.userId })
+  return await ApplicationModel.find({ userId: request.params.userId }).populate({ path: "job", model: "Jobs" })
     .then((application) => {
       return response.json(application);
     })
