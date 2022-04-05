@@ -4,6 +4,7 @@ const JobModel = require("../models/Jobs.model");
 
 const insertApplication = async (request, response) => {
   request.body.status = "PENDING";
+  request.body.userId = request.params.userId;
   return await ApplicationModel.create(request.body)
     .then(async (createdApplication) => {
       const user = await UserModel.findById(request.params.userId);
