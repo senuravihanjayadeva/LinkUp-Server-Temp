@@ -55,6 +55,16 @@ const getApplicationById = async (request, response) => {
     });
 };
 
+const getApplicationByUserId = async (request, response) => {
+  return await ApplicationModel.find({ userId: request.params.userId })
+    .then((application) => {
+      return response.json(application);
+    })
+    .catch((error) => {
+      return response.json(error);
+    });
+};
+
 const updateApplication = async (request, response) => {
   return await ApplicationModel.findById(request.params.applicationId)
     .then(async (applicationDetails) => {
@@ -134,6 +144,7 @@ module.exports = {
   insertApplication,
   getAllApplications,
   getApplicationById,
+  getApplicationByUserId,
   updateApplication,
   deleteApplicationPermenently,
 };
