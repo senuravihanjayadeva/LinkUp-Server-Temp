@@ -64,11 +64,14 @@ const updateJob = async (request, response) => {
         if (request.body.description) {
           jobDetails.description = request.body.description;
         }
-        jobDetails.save().then((updatedJob)=>{
-          return response.json(updatedJob);
-        }).catch((error)=>{
-          return response.json(error);
-        });
+        jobDetails
+          .save()
+          .then((updatedJob) => {
+            return response.json(updatedJob);
+          })
+          .catch((error) => {
+            return response.json(error);
+          });
       } else {
         return response.json("Job Not Found");
       }
@@ -78,7 +81,7 @@ const updateJob = async (request, response) => {
     });
 };
 
-const deleteJobPermenently = async  (request, response) => {
+const deleteJobPermenently = async (request, response) => {
   return await JobModel.findByIdAndDelete(request.params.jobId)
     .then(async (job) => {
       const user = await UserModel.findById(request.params.userId);
