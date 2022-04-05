@@ -128,8 +128,25 @@ const deleteApplicationPermenently = async (request, response) => {
 
         return await user
           .save()
-          .then(() => {
-            return response.json(application);
+          .then(async () => {
+            const job = await JobModel.findById(application.jobId);
+            if (job) {
+              await job.applications.splice(
+                job.applications.findIndex(
+                  (a) => a._id.toString() === application._id.toString()
+                ),
+                1
+              );
+
+              return await job
+                .save()
+                .then(() => {
+                  return response.json(application);
+                })
+                .catch((error) => {
+                  return response.json(error);
+                });
+            }
           })
           .catch((error) => {
             return response.json(error);
